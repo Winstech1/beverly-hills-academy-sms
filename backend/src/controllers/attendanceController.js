@@ -3,9 +3,17 @@ const pool = require('../config/db');
 // GET /api/attendance?class_id=1&date=2026-09-13
 // Returns every student in that class, with their attendance status for that date (or null if not marked yet)
 exports.getAttendance = async (req, res) => {
-  const { class_id, date } = req.query;
-  if (!class_id || !date) {
-    return res.status(400).json({ message: 'class_id and date are required.' });
+  let { class_id, date } = req.query;
+  if (!date) {
+    return res.status(400).json({ message: 'date is required.' });
+  }
+
+  if (req.user.role === 'teacher') {
+    const myClass = await pool.query('SELECT id FROM classes WHERE class_teacher_id = $1', [req.user.id]);
+    class_id = myClass.rows[0]?.id;
+    if (!class_id) return res.json([]); // teacher has no assigned class yet
+  } else if (!class_id) {
+    return res.status(400).json({ message: 'class_id is required.' });
   }
 
   try {
@@ -28,9 +36,17 @@ exports.getAttendance = async (req, res) => {
 // Body: { class_id, date, records: [{ student_id, status }, ...] }
 // Upserts every record in one go (one date + student combo = one row, overwritten if resubmitted)
 exports.saveAttendance = async (req, res) => {
-  const { class_id, date, records } = req.body;
-  if (!class_id || !date || !Array.isArray(records) || !records.length) {
-    return res.status(400).json({ message: 'class_id, date, and a non-empty records array are required.' });
+  let { class_id, date, records } = req.body;
+  if (!date || !Array.isArray(records) || !records.length) {
+    return res.status(400).json({ message: 'date and a non-empty records array are required.' });
+  }
+
+  if (req.user.role === 'teacher') {
+    const myClass = await pool.query('SELECT id FROM classes WHERE class_teacher_id = $1', [req.user.id]);
+    class_id = myClass.rows[0]?.id;
+    if (!class_id) return res.status(403).json({ message: 'You are not assigned as a class teacher.' });
+  } else if (!class_id) {
+    return res.status(400).json({ message: 'class_id is required.' });
   }
 
   const client = await pool.connect();

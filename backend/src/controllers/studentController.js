@@ -2,7 +2,15 @@ const pool = require('../config/db');
 
 // GET /api/students?search=&class_id=&status=&page=1&limit=10
 exports.getStudents = async (req, res) => {
-  const { search = '', class_id, status, page = 1, limit = 10 } = req.query;
+  const { search = '', status, page = 1, limit = 10 } = req.query;
+  let { class_id } = req.query;
+
+  // Teachers can only ever see their own class — override whatever was requested.
+  if (req.user.role === 'teacher') {
+    const myClass = await pool.query('SELECT id FROM classes WHERE class_teacher_id = $1', [req.user.id]);
+    class_id = myClass.rows[0]?.id || 0; // 0 matches no real class, so an unassigned teacher sees nobody
+  }
+
   const offset = (page - 1) * limit;
   const params = [];
   const conditions = [];

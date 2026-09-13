@@ -19,6 +19,19 @@ exports.getClasses = async (req, res) => {
   }
 };
 
+// GET /api/classes/mine  -> the single class this logged-in teacher is Class Teacher of (if any)
+exports.getMyClass = async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT c.id, c.name, c.capacity FROM classes c WHERE c.class_teacher_id = $1`,
+      [req.user.id]
+    );
+    res.json(rows[0] || null);
+  } catch (err) {
+    res.status(500).json({ message: 'Could not fetch your class.' });
+  }
+};
+
 // POST /api/classes
 exports.createClass = async (req, res) => {
   const { name, capacity, class_teacher_id } = req.body;

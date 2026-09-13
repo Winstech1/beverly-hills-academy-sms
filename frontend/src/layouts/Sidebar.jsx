@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const navItems = [
+const adminNavItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/students', label: 'Students', icon: Users },
   { to: '/teachers', label: 'Teachers', icon: GraduationCap },
@@ -25,8 +25,21 @@ const navItems = [
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
+// Teachers get a focused view: their class, attendance, results, assignments, timetable, and messaging —
+// no access to other classes, fees, staff records, or admin-only reports.
+const teacherNavItems = [
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/students', label: 'My Class', icon: Users },
+  { to: '/examinations', label: 'Examinations', icon: ClipboardList },
+  { to: '/attendance', label: 'Attendance', icon: CalendarCheck },
+  { to: '/timetable', label: 'Timetable', icon: CalendarDays },
+  { to: '/assignments', label: 'Assignments', icon: FileText },
+  { to: '/communication', label: 'Communication', icon: MessageSquare },
+];
+
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const navItems = user?.role === 'teacher' ? teacherNavItems : adminNavItems;
 
   return (
     <aside className="w-64 bg-navy-950 text-slate-200 flex flex-col shrink-0 h-screen sticky top-0">

@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { Plus, X, Users } from 'lucide-react';
 import api from '../api/client';
 
-const emptyForm = { name: '', capacity: 50 };
+const emptyForm = { name: '', capacity: 50, class_teacher_id: '' };
 
 export default function Classes() {
   const [classes, setClasses] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [formError, setFormError] = useState('');
@@ -14,8 +15,10 @@ export default function Classes() {
     api.get('/classes').then((res) => setClasses(res.data)).catch(() => {});
   };
 
-  useEffect(() => { load(); }, []);
-
+    useEffect(() => {
+    load();
+    api.get('/teachers', { params: { limit: 200 } }).then((res) => setTeachers(res.data.data)).catch(() => {});
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
@@ -78,9 +81,16 @@ export default function Classes() {
               <input required placeholder="Class Name (e.g. JHS 1)" value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-              <input type="number" placeholder="Capacity" value={form.capacity}
+                            <input type="number" placeholder="Capacity" value={form.capacity}
                 onChange={(e) => setForm({ ...form, capacity: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+              <select value={form.class_teacher_id} onChange={(e) => setForm({ ...form, class_teacher_id: e.target.value })}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                <option value="">Assign Class Teacher (optional)</option>
+                {teachers.map((t) => <option key={t.id} value={t.user_id || ''} disabled={!t.user_id}>
+                  {t.full_name}{!t.user_id ? ' (no login yet)' : ''}
+                </option>)}
+              </select>
 
               {formError && <p className="text-sm text-red-600">{formError}</p>}
 
