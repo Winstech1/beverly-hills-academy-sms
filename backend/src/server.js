@@ -13,6 +13,8 @@ const subjectRoutes = require('./routes/subjectRoutes');
 const examRoutes = require('./routes/examRoutes');
 const assignmentRoutes = require('./routes/assignmentRoutes');
 const transportRoutes = require('./routes/transportRoutes');
+const reportRoutes = require('./routes/reportRoutes');
+const libraryRoutes = require('./routes/libraryRoutes');
 const app = express();
 
 // CLIENT_URL must exactly match your deployed frontend origin (no trailing slash)
@@ -36,6 +38,8 @@ app.use('/api/subjects', subjectRoutes);
 app.use('/api/exams', examRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/transport', transportRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/library', libraryRoutes);
 app.use((req, res) => res.status(404).json({ message: 'Route not found.' }));
 
 // Central error handler (catches anything thrown/passed to next())
