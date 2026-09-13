@@ -8,6 +8,7 @@ const teacherRoutes = require('./routes/teacherRoutes');
 const classRoutes = require('./routes/classRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const attendanceRoutes = require('./routes/attendanceRoutes');
 const app = express();
 
 // CLIENT_URL must exactly match your deployed frontend origin (no trailing slash)
@@ -26,6 +27,7 @@ app.use('/api/teachers', teacherRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/attendance', attendanceRoutes);
 app.use((req, res) => res.status(404).json({ message: 'Route not found.' }));
 
 // Central error handler (catches anything thrown/passed to next())

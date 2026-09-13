@@ -9,6 +9,7 @@ import Teachers from './pages/Teachers';
 import ComingSoon from './pages/ComingSoon';
 import Classes from './pages/Classes';
 import Fees from './pages/Fees';
+import Attendance from './pages/Attendance';
 
 export default function App() {
   return (
@@ -31,7 +32,7 @@ export default function App() {
             <Route path="classes" element={<Classes />} />
             <Route path="subjects" element={<ComingSoon title="Subjects" />} />
             <Route path="examinations" element={<ComingSoon title="Examinations & Results" />} />
-            <Route path="attendance" element={<ComingSoon title="Attendance" />} />
+            <Route path="attendance" element={<Attendance />} />
             <Route path="fees" element={<Fees />} />
             <Route path="timetable" element={<ComingSoon title="Timetable" />} />
             <Route path="assignments" element={<ComingSoon title="Assignments" />} />
