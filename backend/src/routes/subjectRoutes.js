@@ -7,5 +7,7 @@ router.use(authenticate);
 
 router.get('/', subjectController.getSubjects);
 router.post('/', authorize('admin', 'principal'), subjectController.createSubject);
+router.put('/:id', authorize('admin', 'principal'), subjectController.updateSubject);
+router.delete('/:id', authorize('admin'), subjectController.deleteSubject);
 
 module.exports = router;

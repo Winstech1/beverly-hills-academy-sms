@@ -24,3 +24,30 @@ exports.createSubject = async (req, res) => {
     res.status(500).json({ message: 'Could not create subject.' });
   }
 };
+
+// PUT /api/subjects/:id
+exports.updateSubject = async (req, res) => {
+  const { name, department } = req.body;
+  try {
+    const { rows } = await pool.query(
+      `UPDATE subjects SET name = COALESCE($1, name), department = COALESCE($2, department)
+       WHERE id = $3 RETURNING *`,
+      [name, department, req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ message: 'Subject not found.' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ message: 'Could not update subject.' });
+  }
+};
+
+// DELETE /api/subjects/:id
+exports.deleteSubject = async (req, res) => {
+  try {
+    const { rowCount } = await pool.query('DELETE FROM subjects WHERE id = $1', [req.params.id]);
+    if (!rowCount) return res.status(404).json({ message: 'Subject not found.' });
+    res.json({ message: 'Subject deleted.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Could not delete subject. It may still be linked to a teacher or exam.' });
+  }
+};

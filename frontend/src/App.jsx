@@ -11,7 +11,7 @@ import Classes from './pages/Classes';
 import Fees from './pages/Fees';
 import Attendance from './pages/Attendance';
 import Examinations from './pages/Examinations';
-
+import Subjects from './pages/Subjects';
 export default function App() {
   return (
     <AuthProvider>
@@ -31,7 +31,7 @@ export default function App() {
             <Route path="students" element={<Students />} />
             <Route path="teachers" element={<Teachers />} />
             <Route path="classes" element={<Classes />} />
-            <Route path="subjects" element={<ComingSoon title="Subjects" />} />
+            <Route path="subjects" element={<Subjects />} />
             <Route path="examinations" element={<Examinations />} />
             <Route path="attendance" element={<Attendance />} />
             <Route path="fees" element={<Fees />} />
