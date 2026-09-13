@@ -12,6 +12,8 @@ import Fees from './pages/Fees';
 import Attendance from './pages/Attendance';
 import Examinations from './pages/Examinations';
 import Subjects from './pages/Subjects';
+import Assignments from './pages/Assignments';
+import Transportation from './pages/Transportation';
 export default function App() {
   return (
     <AuthProvider>
@@ -36,9 +38,9 @@ export default function App() {
             <Route path="attendance" element={<Attendance />} />
             <Route path="fees" element={<Fees />} />
             <Route path="timetable" element={<ComingSoon title="Timetable" />} />
-            <Route path="assignments" element={<ComingSoon title="Assignments" />} />
+            <Route path="assignments" element={<Assignments />} />
             <Route path="library" element={<ComingSoon title="Library" />} />
-            <Route path="transportation" element={<ComingSoon title="Transportation" />} />
+            <Route path="transportation" element={<Transportation />} />
             <Route path="hostel" element={<ComingSoon title="Hostel" />} />
             <Route path="communication" element={<ComingSoon title="Communication" />} />
             <Route path="reports" element={<ComingSoon title="Reports & Analytics" />} />
