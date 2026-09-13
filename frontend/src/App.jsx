@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
 import Teachers from './pages/Teachers';
 import ComingSoon from './pages/ComingSoon';
+import Classes from './pages/Classes';
 
 export default function App() {
   return (
@@ -26,7 +27,7 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="students" element={<Students />} />
             <Route path="teachers" element={<Teachers />} />
-            <Route path="classes" element={<ComingSoon title="Class & Timetable" />} />
+            <Route path="classes" element={<Classes />} />
             <Route path="subjects" element={<ComingSoon title="Subjects" />} />
             <Route path="examinations" element={<ComingSoon title="Examinations & Results" />} />
             <Route path="attendance" element={<ComingSoon title="Attendance" />} />
