@@ -1,10 +1,17 @@
 const pool = require('../config/db');
 
 // GET /api/assignments?class_id=
+// GET /api/assignments?class_id=
 exports.getAssignments = async (req, res) => {
-  const { class_id } = req.query;
+  let { class_id } = req.query;
   const params = [];
   let where = '';
+
+  if (req.user.role === 'teacher') {
+    const myClass = await pool.query('SELECT id FROM classes WHERE class_teacher_id = $1', [req.user.id]);
+    class_id = myClass.rows[0]?.id || 0;
+  }
+
   if (class_id) {
     params.push(class_id);
     where = `WHERE a.class_id = $1`;
@@ -30,8 +37,17 @@ exports.getAssignments = async (req, res) => {
 };
 
 // POST /api/assignments
+// POST /api/assignments
 exports.createAssignment = async (req, res) => {
-  const { title, class_id, subject_id, description, due_date } = req.body;
+  const { title, subject_id, description, due_date } = req.body;
+  let { class_id } = req.body;
+
+  if (req.user.role === 'teacher') {
+    const myClass = await pool.query('SELECT id FROM classes WHERE class_teacher_id = $1', [req.user.id]);
+    class_id = myClass.rows[0]?.id;
+    if (!class_id) return res.status(403).json({ message: 'You are not assigned as a class teacher.' });
+  }
+
   if (!title || !class_id || !subject_id) {
     return res.status(400).json({ message: 'title, class_id, and subject_id are required.' });
   }

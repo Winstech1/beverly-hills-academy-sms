@@ -62,3 +62,21 @@ exports.getAcademicPerformance = async (req, res) => {
     res.status(500).json({ message: 'Could not generate academic performance report.' });
   }
 };
+
+// GET /api/payments/mine  -> the logged-in student's own fee/payment history
+exports.getMyPayments = async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT p.amount, p.status, p.paid_at, p.method
+       FROM payments p
+       JOIN students s ON s.id = p.student_id
+       WHERE s.user_id = $1
+       ORDER BY p.created_at DESC`,
+      [req.user.id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Could not fetch your payments.' });
+  }
+};

@@ -104,6 +104,7 @@ export default function Library() {
             </button>
           </div>
           <div className="bg-white rounded-xl border border-slate-200">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-slate-500 border-b border-slate-100">
@@ -133,6 +134,7 @@ export default function Library() {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -147,6 +149,7 @@ export default function Library() {
           </div>
           {loanError && <p className="text-sm text-red-600">{loanError}</p>}
           <div className="bg-white rounded-xl border border-slate-200">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-slate-500 border-b border-slate-100">
@@ -176,6 +179,7 @@ export default function Library() {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}

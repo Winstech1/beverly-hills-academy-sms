@@ -5,6 +5,7 @@ import api from '../api/client';
 const emptyForm = {
   admission_no: '', full_name: '', class_id: '', gender: '',
   date_of_birth: '', guardian_name: '', guardian_phone: '', address: '',
+  email: '', password: '',
 };
 
 export default function Students() {
@@ -75,6 +76,7 @@ export default function Students() {
           </div>
         </div>
 
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-slate-500 border-b border-slate-100">
@@ -104,6 +106,7 @@ export default function Students() {
             )}
           </tbody>
         </table>
+        </div>
 
         <div className="flex items-center justify-between px-4 py-3 text-sm text-slate-500">
           <span>Page {page} of {totalPages}</span>
@@ -140,6 +143,15 @@ export default function Students() {
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
               <input placeholder="Guardian Phone" value={form.guardian_phone}
                 onChange={(e) => setForm({ ...form, guardian_phone: e.target.value })}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+
+              <hr className="border-slate-100" />
+              <p className="text-xs text-slate-400">Login access (optional — lets the student/parent sign in to view results, attendance, and fees)</p>
+              <input type="email" placeholder="Login Email" value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+              <input type="password" placeholder="Login Password" value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
 
               {formError && <p className="text-sm text-red-600">{formError}</p>}

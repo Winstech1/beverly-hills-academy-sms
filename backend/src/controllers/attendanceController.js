@@ -90,3 +90,22 @@ exports.getSummary = async (req, res) => {
     res.status(500).json({ message: 'Could not fetch attendance summary.' });
   }
 };
+
+// GET /api/attendance/mine  -> the logged-in student's own attendance history
+exports.getMyAttendance = async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT a.date, a.status
+       FROM attendance a
+       JOIN students s ON s.id = a.student_id
+       WHERE s.user_id = $1
+       ORDER BY a.date DESC
+       LIMIT 60`,
+      [req.user.id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Could not fetch your attendance.' });
+  }
+};

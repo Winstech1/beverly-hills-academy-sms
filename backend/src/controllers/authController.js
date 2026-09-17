@@ -81,3 +81,28 @@ exports.me = async (req, res) => {
     res.status(500).json({ message: 'Could not fetch user.' });
   }
 };
+
+// PUT /api/auth/change-password
+exports.changePassword = async (req, res) => {
+  const { current_password, new_password } = req.body;
+  if (!current_password || !new_password) {
+    return res.status(400).json({ message: 'current_password and new_password are required.' });
+  }
+  if (new_password.length < 8) {
+    return res.status(400).json({ message: 'New password must be at least 8 characters.' });
+  }
+
+  try {
+    const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [req.user.id]);
+    const user = rows[0];
+    const match = await bcrypt.compare(current_password, user.password_hash);
+    if (!match) return res.status(401).json({ message: 'Current password is incorrect.' });
+
+    const newHash = await bcrypt.hash(new_password, 10);
+    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, req.user.id]);
+    res.json({ message: 'Password changed successfully.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Could not change password.' });
+  }
+};

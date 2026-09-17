@@ -155,6 +155,7 @@ export default function Transportation() {
           </div>
 
           <div className="bg-white rounded-xl border border-slate-200">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-slate-500 border-b border-slate-100">
@@ -195,6 +196,7 @@ export default function Transportation() {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}

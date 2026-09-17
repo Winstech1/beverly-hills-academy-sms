@@ -56,6 +56,7 @@ export default function Teachers() {
           </div>
         </div>
 
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-slate-500 border-b border-slate-100">
@@ -83,6 +84,7 @@ export default function Teachers() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {showModal && (
@@ -102,7 +104,7 @@ export default function Teachers() {
               <input placeholder="Department" value={form.department}
                 onChange={(e) => setForm({ ...form, department: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-                           <input placeholder="Phone" value={form.phone}
+              <input placeholder="Phone" value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
 

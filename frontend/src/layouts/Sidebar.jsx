@@ -19,7 +19,7 @@ const adminNavItems = [
   { to: '/assignments', label: 'Assignments', icon: FileText },
   { to: '/library', label: 'Library', icon: Library },
   { to: '/transportation', label: 'Transportation', icon: Bus },
-  { to: '/hostel', label: 'Hostel', icon: Building2 },
+    { to: '/hostel', label: 'Boarding House', icon: Building2 },
   { to: '/communication', label: 'Communication', icon: MessageSquare },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
   { to: '/settings', label: 'Settings', icon: Settings },
@@ -37,9 +37,18 @@ const teacherNavItems = [
   { to: '/communication', label: 'Communication', icon: MessageSquare },
 ];
 
-export default function Sidebar() {
+// Students see only their own portal, timetable, and messages.
+const studentNavItems = [
+  { to: '/my-portal', label: 'My Portal', icon: GraduationCap },
+  { to: '/timetable', label: 'Timetable', icon: CalendarDays },
+  { to: '/communication', label: 'Communication', icon: MessageSquare },
+];
+export default function Sidebar({ onNavigate }) {
   const { user, logout } = useAuth();
-  const navItems = user?.role === 'teacher' ? teacherNavItems : adminNavItems;
+    const navItems =
+    user?.role === 'teacher' ? teacherNavItems :
+    user?.role === 'student' ? studentNavItems :
+    adminNavItems;
 
   return (
     <aside className="w-64 bg-navy-950 text-slate-200 flex flex-col shrink-0 h-screen sticky top-0">
@@ -54,11 +63,12 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
-        {navItems.map(({ to, label, icon: Icon }) => (
+                {navItems.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
             end={to === '/'}
+            onClick={() => onNavigate?.()}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                 isActive

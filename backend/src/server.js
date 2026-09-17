@@ -17,6 +17,8 @@ const reportRoutes = require('./routes/reportRoutes');
 const libraryRoutes = require('./routes/libraryRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const timetableRoutes = require('./routes/timetableRoutes');
+const boardingRoutes = require('./routes/boardingRoutes');
+const settingsRoutes = require('./routes/settingsRoutes');
 const app = express();
 
 // CLIENT_URL must exactly match your deployed frontend origin (no trailing slash)
@@ -44,6 +46,8 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/library', libraryRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/timetable', timetableRoutes);
+app.use('/api/boarding', boardingRoutes);
+app.use('/api/settings', settingsRoutes);
 app.use((req, res) => res.status(404).json({ message: 'Route not found.' }));
 
 // Central error handler (catches anything thrown/passed to next())

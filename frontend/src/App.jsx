@@ -18,6 +18,9 @@ import Reports from './pages/Reports';
 import Library from './pages/Library';
 import Communication from './pages/Communication';
 import Timetable from './pages/Timetable';
+import StudentPortal from './pages/StudentPortal';
+import Boarding from './pages/Boarding';
+import Settings from './pages/Settings';
 export default function App() {
   return (
     <AuthProvider>
@@ -34,6 +37,7 @@ export default function App() {
             }
           >
             <Route index element={<Dashboard />} />
+            <Route path="my-portal" element={<StudentPortal />} />
             <Route path="students" element={<Students />} />
             <Route path="teachers" element={<Teachers />} />
             <Route path="classes" element={<Classes />} />
@@ -45,10 +49,10 @@ export default function App() {
             <Route path="assignments" element={<Assignments />} />
              <Route path="library" element={<Library />} />
             <Route path="transportation" element={<Transportation />} />
-            <Route path="hostel" element={<ComingSoon title="Hostel" />} />
+            <Route path="hostel" element={<Boarding />} />
             <Route path="communication" element={<Communication />} />
             <Route path="reports" element={<Reports />} />
-            <Route path="settings" element={<ComingSoon title="Settings" />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>

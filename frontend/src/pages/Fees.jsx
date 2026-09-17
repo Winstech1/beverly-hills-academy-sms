@@ -117,6 +117,7 @@ export default function Fees() {
           </select>
         </div>
 
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-slate-500 border-b border-slate-100">
@@ -154,6 +155,7 @@ export default function Fees() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {showModal && (
