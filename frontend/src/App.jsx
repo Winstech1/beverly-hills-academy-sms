@@ -22,6 +22,7 @@ import StudentPortal from './pages/StudentPortal';
 import Boarding from './pages/Boarding';
 import Settings from './pages/Settings';
 import Guardians from './pages/Guardians';
+import Admissions from './pages/Admissions';
 export default function App() {
   return (
     <AuthProvider>
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="my-portal" element={<StudentPortal />} />
             <Route path="students" element={<Students />} />
             <Route path="guardians" element={<Guardians />} />
+            <Route path="admissions" element={<Admissions />} />
             <Route path="teachers" element={<Teachers />} />
             <Route path="classes" element={<Classes />} />
             <Route path="subjects" element={<Subjects />} />

@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Users2, GraduationCap, BookOpen, Layers, ClipboardList,
   CalendarCheck, Wallet, CalendarDays, FileText, Library, Bus, Building2,
-  MessageSquare, BarChart3, Settings, LogOut,
+  MessageSquare, BarChart3, Settings, LogOut, ClipboardCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -10,6 +10,7 @@ const adminNavItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/students', label: 'Students', icon: Users },
    { to: '/guardians', label: 'Guardians', icon: Users2 },
+   { to: '/admissions', label: 'Admissions', icon: ClipboardCheck },
   { to: '/teachers', label: 'Teachers', icon: GraduationCap },
   { to: '/classes', label: 'Classes', icon: Layers },
   { to: '/subjects', label: 'Subjects', icon: BookOpen },
