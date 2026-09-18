@@ -23,6 +23,7 @@ import Boarding from './pages/Boarding';
 import Settings from './pages/Settings';
 import Guardians from './pages/Guardians';
 import Admissions from './pages/Admissions';
+import Approvals from './pages/Approvals';
 export default function App() {
   return (
     <AuthProvider>
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="students" element={<Students />} />
             <Route path="guardians" element={<Guardians />} />
             <Route path="admissions" element={<Admissions />} />
+            <Route path="approvals" element={<Approvals />} />
             <Route path="teachers" element={<Teachers />} />
             <Route path="classes" element={<Classes />} />
             <Route path="subjects" element={<Subjects />} />

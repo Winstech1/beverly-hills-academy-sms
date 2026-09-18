@@ -22,6 +22,7 @@ const settingsRoutes = require('./routes/settingsRoutes');
 const guardianRoutes = require('./routes/guardianRoutes');
 const applicantRoutes = require('./routes/applicantRoutes');
 const visitorRoutes = require('./routes/visitorRoutes');
+const approvalRoutes = require('./routes/approvalRoutes');
 const app = express();
 
 // CLIENT_URL must exactly match your deployed frontend origin (no trailing slash)
@@ -54,6 +55,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/guardians', guardianRoutes);
 app.use('/api/applicants', applicantRoutes);
 app.use('/api/visitors', visitorRoutes);
+app.use('/api/approvals', approvalRoutes);
 app.use((req, res) => res.status(404).json({ message: 'Route not found.' }));
 
 // Central error handler (catches anything thrown/passed to next())
