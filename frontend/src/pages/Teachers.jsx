@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, Plus, X } from 'lucide-react';
+import { Search, Plus, X, Trash2 } from 'lucide-react';
 import api from '../api/client';
 
 const emptyForm = { staff_no: '', full_name: '', department: '', phone: '', email: '', password: '' };
@@ -19,6 +19,17 @@ export default function Teachers() {
   };
 
   useEffect(() => { load(); }, [search]);
+    useEffect(() => { load(); }, [search]);
+
+  const handleDelete = async (id, name) => {
+    if (!window.confirm(`Remove ${name} from staff? This cannot be undone.`)) return;
+    try {
+      await api.delete(`/teachers/${id}`);
+      load();
+    } catch {
+      // list stays as-is if it fails
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,6 +75,7 @@ export default function Teachers() {
               <th className="px-4 py-3 font-medium">Subject</th>
               <th className="px-4 py-3 font-medium">Department</th>
               <th className="px-4 py-3 font-medium">Status</th>
+               <th className="px-4 py-3 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -72,10 +84,15 @@ export default function Teachers() {
                 <td className="px-4 py-3 font-medium text-slate-800">{t.full_name}</td>
                 <td className="px-4 py-3 text-slate-600">{t.subject_name || '—'}</td>
                 <td className="px-4 py-3 text-slate-600">{t.department || '—'}</td>
-                <td className="px-4 py-3">
+                               <td className="px-4 py-3">
                   <span className={`text-xs px-2 py-1 rounded-full ${
                     t.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'
                   }`}>{t.status}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <button onClick={() => handleDelete(t.id, t.full_name)} className="text-slate-400 hover:text-red-600">
+                    <Trash2 size={16} />
+                  </button>
                 </td>
               </tr>
             ))}

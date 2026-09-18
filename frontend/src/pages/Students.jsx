@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, Plus, X } from 'lucide-react';
+import { Search, Plus, X, Trash2 } from 'lucide-react';
 import api from '../api/client';
 
 const emptyForm = {
@@ -46,8 +46,17 @@ export default function Students() {
     }
   };
 
-  const totalPages = Math.max(1, Math.ceil(total / limit));
+   const handleDelete = async (id, name) => {
+    if (!window.confirm(`Remove ${name} from the school? This also deletes their attendance, fee, and exam records.`)) return;
+    try {
+      await api.delete(`/students/${id}`);
+      loadStudents();
+    } catch {
+      // list stays as-is if it fails
+    }
+  };
 
+  const totalPages = Math.max(1, Math.ceil(total / limit));
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -84,10 +93,11 @@ export default function Students() {
               <th className="px-4 py-3 font-medium">Admission No.</th>
               <th className="px-4 py-3 font-medium">Class</th>
               <th className="px-4 py-3 font-medium">Status</th>
+               <th className="px-4 py-3 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {students.map((s) => (
+                        {students.map((s) => (
               <tr key={s.id} className="border-b border-slate-50 hover:bg-slate-50">
                 <td className="px-4 py-3 font-medium text-slate-800">{s.full_name}</td>
                 <td className="px-4 py-3 text-slate-600">{s.admission_no}</td>
@@ -99,10 +109,15 @@ export default function Students() {
                     {s.status}
                   </span>
                 </td>
+                <td className="px-4 py-3">
+                  <button onClick={() => handleDelete(s.id, s.full_name)} className="text-slate-400 hover:text-red-600">
+                    <Trash2 size={16} />
+                  </button>
+                </td>
               </tr>
             ))}
             {!students.length && (
-              <tr><td colSpan={4} className="px-4 py-8 text-center text-slate-400">No students found.</td></tr>
+              <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-400">No students found.</td></tr>
             )}
           </tbody>
         </table>
