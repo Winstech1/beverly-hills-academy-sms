@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, X, UserPlus, DoorOpen, LogOut, CheckCircle2 } from 'lucide-react';
+import { Plus, X, UserPlus, DoorOpen, LogOut, CheckCircle2, Trash2 } from 'lucide-react';
 import api from '../api/client';
 
 const emptyApplicantForm = {
@@ -66,7 +66,15 @@ export default function Admissions() {
       // row stays as-is if it fails
     }
   };
-
+  const handleDeleteApplicant = async (id) => {
+    if (!window.confirm('Delete this applicant record? This cannot be undone.')) return;
+    try {
+      await api.delete(`/applicants/${id}`);
+      loadApplicants();
+    } catch {
+      // row stays as-is if it fails
+    }
+  };
   const handleConvert = async (e) => {
     e.preventDefault();
     setConvertError('');
@@ -164,23 +172,28 @@ export default function Admissions() {
                     <td className="px-4 py-3">
                       <span className={`text-xs px-2 py-1 rounded-full ${statusStyles[a.status]}`}>{a.status}</span>
                     </td>
-                    <td className="px-4 py-3">
-                      {a.status === 'Pending' && (
-                        <button onClick={() => updateStatus(a.id, 'Under Review')} className="text-brand-blue text-xs font-medium hover:underline">
-                          Start Review
+                                       <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        {a.status === 'Pending' && (
+                          <button onClick={() => updateStatus(a.id, 'Under Review')} className="text-brand-blue text-xs font-medium hover:underline">
+                            Start Review
+                          </button>
+                        )}
+                        {a.status === 'Under Review' && (
+                          <>
+                            <button onClick={() => updateStatus(a.id, 'Accepted')} className="text-green-600 text-xs font-medium hover:underline">Accept</button>
+                            <button onClick={() => updateStatus(a.id, 'Rejected')} className="text-red-600 text-xs font-medium hover:underline">Reject</button>
+                          </>
+                        )}
+                        {a.status === 'Accepted' && (
+                          <button onClick={() => setConvertingId(a.id)} className="text-purple-600 text-xs font-medium hover:underline flex items-center gap-1">
+                            <CheckCircle2 size={12} /> Enroll as Student
+                          </button>
+                        )}
+                        <button onClick={() => handleDeleteApplicant(a.id)} className="text-slate-400 hover:text-red-600 ml-auto">
+                          <Trash2 size={14} />
                         </button>
-                      )}
-                      {a.status === 'Under Review' && (
-                        <div className="flex gap-2">
-                          <button onClick={() => updateStatus(a.id, 'Accepted')} className="text-green-600 text-xs font-medium hover:underline">Accept</button>
-                          <button onClick={() => updateStatus(a.id, 'Rejected')} className="text-red-600 text-xs font-medium hover:underline">Reject</button>
-                        </div>
-                      )}
-                      {a.status === 'Accepted' && (
-                        <button onClick={() => setConvertingId(a.id)} className="text-purple-600 text-xs font-medium hover:underline flex items-center gap-1">
-                          <CheckCircle2 size={12} /> Enroll as Student
-                        </button>
-                      )}
+                      </div>
                     </td>
                   </tr>
                 ))}
