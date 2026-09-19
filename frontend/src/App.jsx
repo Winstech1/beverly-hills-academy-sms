@@ -24,6 +24,7 @@ import Settings from './pages/Settings';
 import Guardians from './pages/Guardians';
 import Admissions from './pages/Admissions';
 import Approvals from './pages/Approvals';
+import Recruitment from './pages/Recruitment';
 export default function App() {
   return (
     <AuthProvider>
@@ -59,6 +60,7 @@ export default function App() {
             <Route path="communication" element={<Communication />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="recruitment" element={<Recruitment />} />
           </Route>
         </Routes>
       </BrowserRouter>

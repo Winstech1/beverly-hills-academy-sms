@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Users2, GraduationCap, BookOpen, Layers, ClipboardList,
   CalendarCheck, Wallet, CalendarDays, FileText, Library, Bus, Building2,
-  MessageSquare, BarChart3, Settings, LogOut, ClipboardCheck, ClipboardSignature,
+  MessageSquare, BarChart3, Settings, LogOut, ClipboardCheck, ClipboardSignature, Briefcase,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -56,6 +56,12 @@ const adminSections = [
       { to: '/reports', label: 'Reports', icon: BarChart3 },
     ],
   },
+    {
+    label: 'Human Resources',
+    items: [
+      { to: '/recruitment', label: 'Recruitment', icon: Briefcase },
+    ],
+  },
   {
     label: 'System',
     items: [
@@ -74,12 +80,14 @@ const teacherItems = [
   { to: '/assignments', label: 'Assignments', icon: FileText },
   { to: '/communication', label: 'Communication', icon: MessageSquare },
   { to: '/approvals', label: 'Approvals', icon: ClipboardSignature },
+  { to: '/recruitment', label: 'Job Openings', icon: Briefcase },
 ];
 
 const studentItems = [
   { to: '/my-portal', label: 'My Portal', icon: GraduationCap },
   { to: '/timetable', label: 'Timetable', icon: CalendarDays },
   { to: '/communication', label: 'Communication', icon: MessageSquare },
+  { to: '/recruitment', label: 'Job Openings', icon: Briefcase },
 ];
 
 function NavItem({ to, label, icon: Icon, onNavigate }) {
