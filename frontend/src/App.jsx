@@ -25,12 +25,17 @@ import Guardians from './pages/Guardians';
 import Admissions from './pages/Admissions';
 import Approvals from './pages/Approvals';
 import Recruitment from './pages/Recruitment';
+import News from './pages/News';
+import PublicNews from './pages/PublicNews';
+import PublicNewsPost from './pages/PublicNewsPost';
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+           <Route path="/public/news" element={<PublicNews />} />
+          <Route path="/public/news/:slug" element={<PublicNewsPost />} />
 
           <Route
             path="/"
@@ -61,6 +66,7 @@ export default function App() {
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
             <Route path="recruitment" element={<Recruitment />} />
+            <Route path="news" element={<News />} />
           </Route>
         </Routes>
       </BrowserRouter>
