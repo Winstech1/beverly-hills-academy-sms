@@ -18,6 +18,7 @@ export default function Attendance() {
   const [roster, setRoster] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [summary, setSummary] = useState({ Present: 0, Absent: 0, Late: 0 });
 
   useEffect(() => {
     api.get('/classes').then((res) => {
@@ -26,18 +27,21 @@ export default function Attendance() {
     }).catch(() => {});
   }, []);
 
-  useEffect(() => {
+    useEffect(() => {
     if (!classId || !date) return;
     api.get('/attendance', { params: { class_id: classId, date } })
       .then((res) => setRoster(res.data.map((r) => ({ ...r, status: r.status || 'Present' }))))
       .catch(() => setRoster([]));
+    api.get('/attendance/summary', { params: { class_id: classId, date } })
+      .then((res) => setSummary(res.data))
+      .catch(() => setSummary({ Present: 0, Absent: 0, Late: 0 }));
   }, [classId, date]);
 
   const setStatus = (studentId, status) => {
     setRoster((prev) => prev.map((r) => (r.student_id === studentId ? { ...r, status } : r)));
   };
 
-  const handleSave = async () => {
+    const handleSave = async () => {
     setSaving(true);
     setMessage('');
     try {
@@ -47,6 +51,8 @@ export default function Attendance() {
         records: roster.map((r) => ({ student_id: r.student_id, status: r.status })),
       });
       setMessage('Attendance saved successfully.');
+      const res = await api.get('/attendance/summary', { params: { class_id: classId, date } });
+      setSummary(res.data);
     } catch (err) {
       setMessage(err.response?.data?.message || 'Could not save attendance.');
     } finally {
@@ -87,6 +93,21 @@ export default function Attendance() {
           {message}
         </div>
       )}
+      
+      <div className="grid grid-cols-3 gap-3">
+        <div className="bg-green-50 border border-green-100 rounded-lg p-3 text-center">
+          <p className="text-xs text-green-600">Present</p>
+          <p className="text-xl font-semibold text-green-700">{summary.Present}</p>
+        </div>
+        <div className="bg-red-50 border border-red-100 rounded-lg p-3 text-center">
+          <p className="text-xs text-red-600">Absent</p>
+          <p className="text-xl font-semibold text-red-700">{summary.Absent}</p>
+        </div>
+        <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 text-center">
+          <p className="text-xs text-amber-600">Late</p>
+          <p className="text-xl font-semibold text-amber-700">{summary.Late}</p>
+        </div>
+      </div>
 
       <div className="bg-white rounded-xl border border-slate-200">
         <div className="overflow-x-auto">

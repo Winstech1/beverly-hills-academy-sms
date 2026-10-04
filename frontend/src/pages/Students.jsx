@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Search, Plus, X, Trash2 } from 'lucide-react';
 import api from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 const emptyForm = {
   admission_no: '', full_name: '', class_id: '', gender: '',
   date_of_birth: '', guardian_name: '', guardian_phone: '', address: '',
-  email: '', password: '',
+  username: '', password: '',
 };
 
 export default function Students() {
+  const { user } = useAuth();
+  const isTeacher = user?.role === 'teacher';
   const [students, setStudents] = useState([]);
-  const [classes, setClasses] = useState([]);
+   const [classes, setClasses] = useState([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -148,11 +151,13 @@ export default function Students() {
               <input required placeholder="Full Name" value={form.full_name}
                 onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-              <select value={form.class_id} onChange={(e) => setForm({ ...form, class_id: e.target.value })}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-                <option value="">Select Class</option>
-                {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
+                           {!isTeacher && (
+                <select value={form.class_id} onChange={(e) => setForm({ ...form, class_id: e.target.value })}
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                  <option value="">Select Class</option>
+                  {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              )}
               <input placeholder="Guardian Name" value={form.guardian_name}
                 onChange={(e) => setForm({ ...form, guardian_name: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
@@ -160,10 +165,10 @@ export default function Students() {
                 onChange={(e) => setForm({ ...form, guardian_phone: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
 
-              <hr className="border-slate-100" />
+                           <hr className="border-slate-100" />
               <p className="text-xs text-slate-400">Login access (optional — lets the student/parent sign in to view results, attendance, and fees)</p>
-              <input type="email" placeholder="Login Email" value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              <input placeholder="Username (e.g. joseph.kudavor)" value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
               <input type="password" placeholder="Login Password" value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}

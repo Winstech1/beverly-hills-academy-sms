@@ -26,8 +26,18 @@ import Admissions from './pages/Admissions';
 import Approvals from './pages/Approvals';
 import Recruitment from './pages/Recruitment';
 import News from './pages/News';
+import Store from './pages/Store';
 import PublicNews from './pages/PublicNews';
 import PublicNewsPost from './pages/PublicNewsPost';
+import Welfare from './pages/Welfare';
+import TeacherWelfare from './pages/TeacherWelfare';
+import { useAuth } from './context/AuthContext';
+
+
+function WelfareRoute() {
+  const { user } = useAuth();
+  return user?.role === 'teacher' ? <TeacherWelfare /> : <Welfare />;
+}
 export default function App() {
   return (
     <AuthProvider>
@@ -67,6 +77,8 @@ export default function App() {
             <Route path="settings" element={<Settings />} />
             <Route path="recruitment" element={<Recruitment />} />
             <Route path="news" element={<News />} />
+            <Route path="store" element={<Store />} />
+            <Route path="welfare" element={<WelfareRoute />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -29,16 +29,18 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Users} label="Total Students" value={stats?.total_students ?? '—'} color="blue" />
         <StatCard icon={GraduationCap} label="Total Teachers" value={stats?.total_teachers ?? '—'} color="green" />
         <StatCard icon={Layers} label="Total Classes" value={stats?.total_classes ?? '—'} color="purple" />
-        <StatCard
-          icon={Wallet}
-          label="Total Fees Collected"
-          value={stats ? `GHS ${Number(stats.total_fees_collected).toLocaleString()}` : '—'}
-          color="amber"
-        />
+        {user?.role !== 'teacher' && user?.role !== 'student' && (
+          <StatCard
+            icon={Wallet}
+            label="Total Fees Collected"
+            value={stats ? `GHS ${Number(stats.total_fees_collected).toLocaleString()}` : '—'}
+            color="amber"
+          />
+        )}
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 p-5">

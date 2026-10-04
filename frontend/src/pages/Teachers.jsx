@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Search, Plus, X, Trash2 } from 'lucide-react';
 import api from '../api/client';
 
-const emptyForm = { staff_no: '', full_name: '', department: '', phone: '', email: '', password: '' };
+const emptyForm = { staff_no: '', full_name: '', department: '', phone: '', username: '', password: '' };
 
 export default function Teachers() {
   const [teachers, setTeachers] = useState([]);
@@ -125,10 +125,10 @@ export default function Teachers() {
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
 
-              <hr className="border-slate-100" />
+                            <hr className="border-slate-100" />
               <p className="text-xs text-slate-400">Login access (optional — lets this teacher sign in to their own portal)</p>
-              <input type="email" placeholder="Login Email" value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              <input placeholder="Username (e.g. j.mensah)" value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
               <input type="password" placeholder="Login Password" value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}

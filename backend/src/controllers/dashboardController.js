@@ -2,12 +2,15 @@ const pool = require('../config/db');
 
 // GET /api/dashboard/stats  -> the 4 top cards + enrollment trend
 exports.getStats = async (req, res) => {
+  const isTeacherOrStudent = req.user.role === 'teacher' || req.user.role === 'student';
   try {
     const [students, teachers, classes, fees] = await Promise.all([
       pool.query(`SELECT COUNT(*) FROM students WHERE status = 'Active'`),
       pool.query(`SELECT COUNT(*) FROM teachers WHERE status = 'Active'`),
       pool.query(`SELECT COUNT(*) FROM classes`),
-      pool.query(`SELECT COALESCE(SUM(amount), 0) AS total FROM payments WHERE status = 'Paid'`),
+      isTeacherOrStudent
+        ? Promise.resolve({ rows: [{ total: null }] })
+        : pool.query(`SELECT COALESCE(SUM(amount), 0) AS total FROM payments WHERE status = 'Paid'`),
     ]);
 
     const enrollmentTrend = await pool.query(`

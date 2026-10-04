@@ -25,6 +25,8 @@ const visitorRoutes = require('./routes/visitorRoutes');
 const approvalRoutes = require('./routes/approvalRoutes');
 const recruitmentRoutes = require('./routes/recruitmentRoutes');
 const newsRoutes = require('./routes/newsRoutes');
+const storeRoutes = require('./routes/storeRoutes');
+const welfareRoutes = require('./routes/welfareRoutes');
 const app = express();
 
 // CLIENT_URL must exactly match your deployed frontend origin (no trailing slash)
@@ -60,6 +62,8 @@ app.use('/api/visitors', visitorRoutes);
 app.use('/api/approvals', approvalRoutes);
 app.use('/api/recruitment', recruitmentRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/store', storeRoutes);
+app.use('/api/welfare', welfareRoutes);
 app.use((req, res) => res.status(404).json({ message: 'Route not found.' }));
 
 // Central error handler (catches anything thrown/passed to next())

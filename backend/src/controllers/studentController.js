@@ -75,11 +75,19 @@ exports.getStudent = async (req, res) => {
 // email/password are optional — if given, creates a login account (role='student') so the
 // student (or parent) can sign into their own portal to view results, attendance, and fees.
 exports.createStudent = async (req, res) => {
-  const {
-    admission_no, full_name, class_id, date_of_birth,
+    const {
+    admission_no, full_name, date_of_birth,
     gender, guardian_name, guardian_phone, address, photo_url,
-    email, password,
+    username, password,
   } = req.body;
+  let { class_id } = req.body;
+
+  // Teachers can only ever add students into their own class.
+  if (req.user.role === 'teacher') {
+    const myClass = await pool.query('SELECT id FROM classes WHERE class_teacher_id = $1', [req.user.id]);
+    class_id = myClass.rows[0]?.id;
+    if (!class_id) return res.status(403).json({ message: 'You are not assigned as a class teacher.' });
+  }
 
   if (!admission_no || !full_name) {
     return res.status(400).json({ message: 'admission_no and full_name are required.' });
@@ -90,16 +98,16 @@ exports.createStudent = async (req, res) => {
     await client.query('BEGIN');
     let userId = null;
 
-    if (email && password) {
-      const existing = await client.query('SELECT id FROM users WHERE email = $1', [email]);
+        if (username && password) {
+      const existing = await client.query('SELECT id FROM users WHERE username = $1', [username]);
       if (existing.rows.length) {
         await client.query('ROLLBACK');
-        return res.status(409).json({ message: 'A user with this email already exists.' });
+        return res.status(409).json({ message: 'This username is already taken.' });
       }
       const passwordHash = await bcrypt.hash(password, 10);
       const userResult = await client.query(
-        `INSERT INTO users (full_name, email, password_hash, role) VALUES ($1,$2,$3,'student') RETURNING id`,
-        [full_name, email, passwordHash]
+        `INSERT INTO users (full_name, username, password_hash, role) VALUES ($1,$2,$3,'student') RETURNING id`,
+        [full_name, username, passwordHash]
       );
       userId = userResult.rows[0].id;
     }

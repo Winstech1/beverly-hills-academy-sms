@@ -41,14 +41,18 @@ exports.register = async (req, res) => {
 };
 
 // POST /api/auth/login
+// Accepts either an email (admin/principal) or a username (teacher/student) in the same field.
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required.' });
+    return res.status(400).json({ message: 'Email/username and password are required.' });
   }
 
   try {
-    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const { rows } = await pool.query(
+      'SELECT * FROM users WHERE email = $1 OR username = $1',
+      [email]
+    );
     const user = rows[0];
     if (!user || !user.is_active) {
       return res.status(401).json({ message: 'Invalid email or password.' });

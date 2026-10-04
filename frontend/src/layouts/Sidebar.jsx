@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Users2, GraduationCap, BookOpen, Layers, ClipboardList,
   CalendarCheck, Wallet, CalendarDays, FileText, Library, Bus, Building2,
-  MessageSquare, BarChart3, Settings, LogOut, ClipboardCheck, ClipboardSignature, Briefcase,
+    MessageSquare, BarChart3, Settings, LogOut, ClipboardCheck, ClipboardSignature, Briefcase, Newspaper, Package, HeartHandshake,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -33,6 +33,7 @@ const adminSections = [
       { to: '/library', label: 'Library', icon: Library },
       { to: '/transportation', label: 'Transportation', icon: Bus },
       { to: '/hostel', label: 'Boarding House', icon: Building2 },
+      { to: '/store', label: 'Store', icon: Package },
     ],
   },
   {
@@ -56,10 +57,12 @@ const adminSections = [
       { to: '/reports', label: 'Reports', icon: BarChart3 },
     ],
   },
-    {
+      {
     label: 'Human Resources',
     items: [
       { to: '/recruitment', label: 'Recruitment', icon: Briefcase },
+      { to: '/news', label: 'News & Blog', icon: Newspaper },
+      { to: '/welfare', label: 'Staff Welfare', icon: HeartHandshake },
     ],
   },
   {
@@ -81,6 +84,7 @@ const teacherItems = [
   { to: '/communication', label: 'Communication', icon: MessageSquare },
   { to: '/approvals', label: 'Approvals', icon: ClipboardSignature },
   { to: '/recruitment', label: 'Job Openings', icon: Briefcase },
+   { to: '/welfare', label: 'My Welfare', icon: HeartHandshake },
 ];
 
 const studentItems = [

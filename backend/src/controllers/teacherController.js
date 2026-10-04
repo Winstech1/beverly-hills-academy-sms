@@ -24,9 +24,9 @@ exports.getTeachers = async (req, res) => {
     const total = parseInt(countResult.rows[0].count, 10);
 
     params.push(limit, offset);
-    const { rows } = await pool.query(
+        const { rows } = await pool.query(
       `SELECT t.id, t.staff_no, t.full_name, t.photo_url, t.department, t.status, t.user_id,
-              sub.name AS subject_name, u.email
+              sub.name AS subject_name, u.username
        FROM teachers t
        LEFT JOIN subjects sub ON sub.id = t.subject_id
        LEFT JOIN users u ON u.id = t.user_id
@@ -46,8 +46,8 @@ exports.getTeachers = async (req, res) => {
 // GET /api/teachers/:id
 exports.getTeacher = async (req, res) => {
   try {
-    const { rows } = await pool.query(
-      `SELECT t.*, sub.name AS subject_name, u.email
+        const { rows } = await pool.query(
+      `SELECT t.*, sub.name AS subject_name, u.username
        FROM teachers t
        LEFT JOIN subjects sub ON sub.id = t.subject_id
        LEFT JOIN users u ON u.id = t.user_id
@@ -66,7 +66,7 @@ exports.getTeacher = async (req, res) => {
 // so they can sign in to their own portal. email/password are optional — if omitted,
 // the teacher record is created without login access (can be added later via PUT).
 exports.createTeacher = async (req, res) => {
-  const { staff_no, full_name, subject_id, department, phone, photo_url, email, password } = req.body;
+  const { staff_no, full_name, subject_id, department, phone, photo_url, username, password } = req.body;
   if (!staff_no || !full_name) {
     return res.status(400).json({ message: 'staff_no and full_name are required.' });
   }
@@ -76,16 +76,16 @@ exports.createTeacher = async (req, res) => {
     await client.query('BEGIN');
     let userId = null;
 
-    if (email && password) {
-      const existing = await client.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (username && password) {
+      const existing = await client.query('SELECT id FROM users WHERE username = $1', [username]);
       if (existing.rows.length) {
         await client.query('ROLLBACK');
-        return res.status(409).json({ message: 'A user with this email already exists.' });
+        return res.status(409).json({ message: 'This username is already taken.' });
       }
       const passwordHash = await bcrypt.hash(password, 10);
       const userResult = await client.query(
-        `INSERT INTO users (full_name, email, password_hash, role) VALUES ($1,$2,$3,'teacher') RETURNING id`,
-        [full_name, email, passwordHash]
+        `INSERT INTO users (full_name, username, password_hash, role) VALUES ($1,$2,$3,'teacher') RETURNING id`,
+        [full_name, username, passwordHash]
       );
       userId = userResult.rows[0].id;
     }
@@ -139,12 +139,22 @@ exports.updateTeacher = async (req, res) => {
 };
 
 // DELETE /api/teachers/:id
+// Also removes their login (users row), which automatically clears them from
+// classes.class_teacher_id (ON DELETE SET NULL) — the class itself is untouched
+// and stays "unassigned" until a new teacher is put in charge of it.
 exports.deleteTeacher = async (req, res) => {
   try {
-    const { rowCount } = await pool.query('DELETE FROM teachers WHERE id = $1', [req.params.id]);
-    if (!rowCount) return res.status(404).json({ message: 'Teacher not found.' });
-    res.json({ message: 'Teacher deleted.' });
+    const teacherResult = await pool.query('SELECT user_id FROM teachers WHERE id = $1', [req.params.id]);
+    if (!teacherResult.rows.length) return res.status(404).json({ message: 'Teacher not found.' });
+
+    const userId = teacherResult.rows[0].user_id;
+    await pool.query('DELETE FROM teachers WHERE id = $1', [req.params.id]);
+    if (userId) {
+      await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+    }
+    res.json({ message: 'Teacher removed and their login access revoked.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Could not delete teacher.' });
   }
 };
