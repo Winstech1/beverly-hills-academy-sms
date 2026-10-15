@@ -1,12 +1,11 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AppLayout from './layouts/AppLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
 import Teachers from './pages/Teachers';
-import ComingSoon from './pages/ComingSoon';
 import Classes from './pages/Classes';
 import Fees from './pages/Fees';
 import Attendance from './pages/Attendance';
@@ -31,20 +30,27 @@ import PublicNews from './pages/PublicNews';
 import PublicNewsPost from './pages/PublicNewsPost';
 import Welfare from './pages/Welfare';
 import TeacherWelfare from './pages/TeacherWelfare';
-import { useAuth } from './context/AuthContext';
-
+import Accounting from './pages/Accounting';
 
 function WelfareRoute() {
   const { user } = useAuth();
   return user?.role === 'teacher' ? <TeacherWelfare /> : <Welfare />;
 }
+
+// Accountants go straight to their page; everyone else sees the dashboard.
+function HomeRoute() {
+  const { user } = useAuth();
+  if (user?.role === 'accountant') return <Navigate to="/accounting" replace />;
+  return <Dashboard />;
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-           <Route path="/public/news" element={<PublicNews />} />
+          <Route path="/public/news" element={<PublicNews />} />
           <Route path="/public/news/:slug" element={<PublicNewsPost />} />
 
           <Route
@@ -55,7 +61,7 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<Dashboard />} />
+            <Route index element={<HomeRoute />} />
             <Route path="my-portal" element={<StudentPortal />} />
             <Route path="students" element={<Students />} />
             <Route path="guardians" element={<Guardians />} />
@@ -69,7 +75,7 @@ export default function App() {
             <Route path="fees" element={<Fees />} />
             <Route path="timetable" element={<Timetable />} />
             <Route path="assignments" element={<Assignments />} />
-             <Route path="library" element={<Library />} />
+            <Route path="library" element={<Library />} />
             <Route path="transportation" element={<Transportation />} />
             <Route path="hostel" element={<Boarding />} />
             <Route path="communication" element={<Communication />} />
@@ -79,6 +85,7 @@ export default function App() {
             <Route path="news" element={<News />} />
             <Route path="store" element={<Store />} />
             <Route path="welfare" element={<WelfareRoute />} />
+            <Route path="accounting" element={<Accounting />} />
           </Route>
         </Routes>
       </BrowserRouter>

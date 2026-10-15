@@ -64,6 +64,9 @@ app.use('/api/recruitment', recruitmentRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/store', storeRoutes);
 app.use('/api/welfare', welfareRoutes);
+app.use('/api/finance', require('./routes/financeRoutes'));
+app.use('/api/payroll', require('./routes/payrollRoutes'));
+app.use('/api/accountants', require('./routes/accountantRoutes'));
 app.use((req, res) => res.status(404).json({ message: 'Route not found.' }));
 
 // Central error handler (catches anything thrown/passed to next())

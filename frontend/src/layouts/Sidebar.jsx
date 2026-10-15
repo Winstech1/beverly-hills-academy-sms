@@ -2,7 +2,8 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Users2, GraduationCap, BookOpen, Layers, ClipboardList,
   CalendarCheck, Wallet, CalendarDays, FileText, Library, Bus, Building2,
-    MessageSquare, BarChart3, Settings, LogOut, ClipboardCheck, ClipboardSignature, Briefcase, Newspaper, Package, HeartHandshake,
+  MessageSquare, BarChart3, Settings, LogOut, ClipboardCheck, ClipboardSignature,
+  Briefcase, Newspaper, Package, HeartHandshake, Calculator,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -47,6 +48,7 @@ const adminSections = [
     label: 'Finance',
     items: [
       { to: '/fees', label: 'Fees & Payments', icon: Wallet },
+      { to: '/accounting', label: 'Accounting', icon: Calculator },
     ],
   },
   {
@@ -57,7 +59,7 @@ const adminSections = [
       { to: '/reports', label: 'Reports', icon: BarChart3 },
     ],
   },
-      {
+  {
     label: 'Human Resources',
     items: [
       { to: '/recruitment', label: 'Recruitment', icon: Briefcase },
@@ -73,7 +75,7 @@ const adminSections = [
   },
 ];
 
-// Teachers and students get short, flat lists — no need for section grouping.
+// Teachers, students and accountants get short, flat lists, no section grouping.
 const teacherItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/students', label: 'My Class', icon: Users },
@@ -84,7 +86,7 @@ const teacherItems = [
   { to: '/communication', label: 'Communication', icon: MessageSquare },
   { to: '/approvals', label: 'Approvals', icon: ClipboardSignature },
   { to: '/recruitment', label: 'Job Openings', icon: Briefcase },
-   { to: '/welfare', label: 'My Welfare', icon: HeartHandshake },
+  { to: '/welfare', label: 'My Welfare', icon: HeartHandshake },
 ];
 
 const studentItems = [
@@ -92,6 +94,10 @@ const studentItems = [
   { to: '/timetable', label: 'Timetable', icon: CalendarDays },
   { to: '/communication', label: 'Communication', icon: MessageSquare },
   { to: '/recruitment', label: 'Job Openings', icon: Briefcase },
+];
+
+const accountantItems = [
+  { to: '/accounting', label: 'Accounting', icon: Calculator },
 ];
 
 function NavItem({ to, label, icon: Icon, onNavigate }) {
@@ -118,6 +124,8 @@ export default function Sidebar({ onNavigate }) {
   const { user, logout } = useAuth();
   const isTeacher = user?.role === 'teacher';
   const isStudent = user?.role === 'student';
+  const isAccountant = user?.role === 'accountant';
+  const isAdminLike = !isTeacher && !isStudent && !isAccountant;
 
   return (
     <aside className="w-64 bg-gradient-to-b from-navy-950 to-navy-900 text-slate-200 flex flex-col shrink-0 h-screen sticky top-0">
@@ -138,7 +146,10 @@ export default function Sidebar({ onNavigate }) {
         {isStudent && studentItems.map((item) => (
           <NavItem key={item.to} {...item} onNavigate={onNavigate} />
         ))}
-        {!isTeacher && !isStudent && adminSections.map((section) => (
+        {isAccountant && accountantItems.map((item) => (
+          <NavItem key={item.to} {...item} onNavigate={onNavigate} />
+        ))}
+        {isAdminLike && adminSections.map((section) => (
           <div key={section.label}>
             <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
               {section.label}
@@ -154,7 +165,7 @@ export default function Sidebar({ onNavigate }) {
 
       <div className="border-t border-white/10 px-4 py-4">
         <p className="text-sm font-medium text-white truncate">{user?.full_name || 'Admin'}</p>
-        <p className="text-xs text-slate-400 truncate">{user?.email}</p>
+        <p className="text-xs text-slate-400 truncate">{user?.email || user?.username}</p>
         <button
           onClick={logout}
           className="mt-3 flex items-center gap-2 text-sm text-slate-300 hover:text-white"
